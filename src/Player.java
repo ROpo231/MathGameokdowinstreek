@@ -2,9 +2,13 @@ public class Player {
 
     private String name;
     private int score;
+    private int roundScore;
+
+
 
     public Player(String name) {
         this.name = name;
+        roundScore = 0;
         score = 0;
     }
 
@@ -22,5 +26,6 @@ public class Player {
 
     public void reset() {
         score = 0;
+
     }
 }

@@ -1,18 +1,28 @@
 import java.util.Scanner;
 
 public class MathGame {
+    public int counterDet;
+    private int rouCounter;
+    private Player fiPla1;
+    private Player fiPla2;
 
     private Player player1;
     private Player player2;
+    private Player player3;
     private Player currentPlayer;
     private Player winner;
     private boolean gameOver;
     private Scanner scanner;
 
     // create MathGame object
-    public MathGame(Player player1, Player player2, Scanner scanner) {
+    public MathGame(Player player1, Player player2, Player player3, Scanner scanner) {
         this.player1 = player1;
         this.player2 = player2;
+        this.player3 = player3;
+        this.counterDet = 0;
+        this.rouCounter=0;
+
+
         this.scanner = scanner;
         currentPlayer = null; // will get assigned at start of game
         winner = null; // will get assigned when a Player wins
@@ -39,8 +49,10 @@ public class MathGame {
                 swapPlayers();  // this helper method (shown below) sets currentPlayer to the other Player
             } else {
                 System.out.println("INCORRECT!");
-                gameOver = true;
-                determineWinner();
+                if (counterDet == 2) {
+                    gameOver = true;
+                    determineWinner();
+                }
             }
         }
     }
@@ -51,6 +63,7 @@ public class MathGame {
         System.out.println("Current Scores:");
         System.out.println(player1.getName() + ": " + player1.getScore());
         System.out.println(player2.getName() + ": " + player2.getScore());
+        System.out.println(player3.getName() + ": " + player3.getScore());
         System.out.println("--------------------------------------");
     }
 
@@ -58,6 +71,10 @@ public class MathGame {
     public void resetGame() {
         player1.reset(); // this method resets the player
         player2.reset();
+        player3.reset();
+        counterDet = 0;
+        fiPla1 = null;
+        fiPla2 = null;
         gameOver = false;
         currentPlayer = null;
         winner = null;
@@ -67,11 +84,13 @@ public class MathGame {
 
     // randomly chooses one of the Player objects to be the currentPlayer
     private void chooseStartingPlayer() {
-        int randNum = (int) (Math.random() * 2) + 1;
+        int randNum = (int) (Math.random() * 3) + 1;
         if (randNum == 1) {
             currentPlayer = player1;
-        } else {
+        } else if (randNum == 2) {
             currentPlayer = player2;
+        } else {
+            currentPlayer = player3;
         }
     }
 
@@ -106,25 +125,81 @@ public class MathGame {
         if (playerAnswer == correctAnswer) {
             return true;
         } else {
+            counterDet++;
+            if(counterDet == 1) {
+                if (currentPlayer == player1) {
+                    fiPla1 = player2;
+                    fiPla2 = player3;
+
+                }
+                if (currentPlayer == player2) {
+                    fiPla1 = player3;
+                    fiPla2 = player1;
+
+                }
+                if (currentPlayer == player3) {
+                    fiPla1 = player1;
+                    fiPla2 = player2;
+
+                }
+                currentPlayer = fiPla1;
+            }
             return false;
+
         }
     }
 
     // swaps the currentPlayer to the other player
     private void swapPlayers() {
-        if (currentPlayer == player1) {
-            currentPlayer = player2;
-        } else {
-            currentPlayer = player1;
+        if (counterDet == 1){
+            if (currentPlayer == fiPla2) {
+                currentPlayer = fiPla1;
+            } else {
+                currentPlayer = fiPla2;
+            }
+
+
+        }
+        else {
+            if (currentPlayer == player1) {
+                currentPlayer = player2;
+            } else if (currentPlayer == player2) {
+                currentPlayer = player3;
+            } else {
+                currentPlayer = player1;
+            }
         }
     }
 
+
     // sets the winner when the game ends based on the player that missed the question
     private void determineWinner() {
-        if (currentPlayer == player1) {
-            winner = player2;
-        } else {
-            winner = player1;
+        if (counterDet >= 1) {
+            if (currentPlayer == fiPla1) {
+                winner = fiPla2;
+            } else {
+                winner = fiPla1;
+            }
+        }
+        else {
+            if (currentPlayer == player1){
+                currentPlayer = player2;
+            }
+            else if(currentPlayer == player2){
+                currentPlayer = player3;
+            }
+            else{
+                currentPlayer = player1;
+            }
         }
     }
+    public void winStrik(){
+
+
+
+
+
+
+    }
+
 }
